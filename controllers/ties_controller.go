@@ -17,10 +17,10 @@ func (c TiesController) Mount(router chi.Router) error {
 		r.Use(RequireAuth)
 		r.Get("/", c.Index)
 		r.Post("/", c.Create)
-		r.Delete("/{slug:[a-zA-Z0-9]+}", c.Delete)
+		r.Delete("/{slug:"+domain.SlugRx+"}", c.Delete)
 	})
 
-	router.Get("/{slug:[a-zA-Z0-9]+}", c.Redirect)
+	router.Get("/{slug:"+domain.SlugRx+"}", c.Redirect)
 	return nil
 }
 

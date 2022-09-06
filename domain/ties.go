@@ -8,10 +8,10 @@ import (
 	"tie.prodigy9.co/data"
 )
 
-var SlugRx = regexp.MustCompile("^[0-9a-zA-Z]+$")
+const SlugRx = `[0-9a-zA-Z\-]+`
 
 func ValidSlug(v string) error {
-	if SlugRx.MatchString(v) {
+	if ok, _ := regexp.MatchString("^"+SlugRx+"$", v); ok {
 		return nil
 	}
 
