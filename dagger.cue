@@ -11,7 +11,7 @@ dagger.#Plan & {
 		env: {
 			GITHUB_USER:  string
 			GITHUB_TOKEN: dagger.#Secret
-			IMAGE:        "ghcr.io/prod9/tie:latest"
+			IMAGE:        string | *"ghcr.io/prod9/tie:latest"
 		}
 	}
 
@@ -30,7 +30,7 @@ dagger.#Plan & {
 
 		push: docker.#Push & {
 			image: actions.build.output
-			dest:  "ghcr.io/prod9/api:latest"
+			dest:  client.env.IMAGE
 			auth:  _auth
 		}
 	}
