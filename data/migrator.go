@@ -16,7 +16,7 @@ import (
 // language=PostgreSQL
 const (
 	CreateMigrationsTableSQL = `
-		CREATE TABLE IF NOT EXISTS middlewares
+		CREATE TABLE IF NOT EXISTS migrations
 		(
 			name     text PRIMARY KEY,
 			up_sql   text NOT NULL,
@@ -24,15 +24,15 @@ const (
 		);`
 	ListMigrationsSQL = `
 		SELECT *
-		FROM middlewares
+		FROM migrations
 		ORDER BY name ASC`
 	UpdateMigrationSQL = `
-		INSERT INTO middlewares (name, up_sql, down_sql)
+		INSERT INTO migrations (name, up_sql, down_sql)
 		VALUES ($1, $2, $3)
 		ON CONFLICT (name) DO UPDATE
 		SET up_sql = $2, down_sql = $3`
 	PruneMigrationSQL = `
-		DELETE FROM middlewares
+		DELETE FROM migrations
 		WHERE name = $1`
 )
 
@@ -54,13 +54,13 @@ const (
 	// Exports the migration content from the database to a file
 	// TODO: ActionExport
 	//   This would be a different mode for `ActionPrune` so we'll need a switch
-	//   for user to specify which action they want for middlewares that is in
+	//   for user to specify which action they want for migrations that is in
 	//   the database but is missing from the filesystem. IMO This is a better
 	//   default option than simply pruning as well. Also, if the switch is on,
 	//   ActionUpdate should result in updating the filesystem from the DB rather
 	//   than the other way around.
 
-	// ActionMigrate runs all middlewares that are yet to be ran
+	// ActionMigrate runs all migrations that are yet to be ran
 	ActionMigrate
 	// ActionRollback rollbacks the most recent migration
 	ActionRollback
@@ -204,7 +204,7 @@ func (m *Migrator) planMigrate(inFiles []Migration, inDB []Migration) (actions [
 	for _, d := range diffs {
 		switch d.Op {
 		case gendiff.Insert:
-			// some middlewares were removed/changed prior to this migration, which means that
+			// some migrations were removed/changed prior to this migration, which means that
 			// the db is likely not in the state that the migration expects it to be.
 			if dirty {
 				err = fmt.Errorf("db state divergence detected, please carefully review and re-sync")

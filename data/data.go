@@ -55,6 +55,26 @@ func IsNoRows(err error) bool {
 	return errors.Is(err, sql.ErrNoRows)
 }
 
+func Get(ctx context.Context, out any, sql string, args ...any) (err error) {
+	var scope Scope
+	if scope, err = NewScope(ctx, nil); err != nil {
+		return
+	} else {
+		defer scope.End(&err)
+		return scope.Get(out, sql, args...)
+	}
+}
+
+func Select(ctx context.Context, out any, sql string, args ...any) (err error) {
+	var scope Scope
+	if scope, err = NewScope(ctx, nil); err != nil {
+		return
+	} else {
+		defer scope.End(&err)
+		return scope.Select(out, sql, args...)
+	}
+}
+
 func Exec(ctx context.Context, sql string, args ...any) error {
 	_, err := Run(ctx, func(s Scope) (any, error) {
 		return nil, s.Exec(sql, args...)

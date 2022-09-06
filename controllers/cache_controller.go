@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"context"
-	"github.com/julienschmidt/httprouter"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"tie.prodigy9.co/config"
 	"tie.prodigy9.co/controllers/render"
@@ -19,7 +19,9 @@ var (
 )
 
 func init() {
-	if cfg, err := config.Configure(); err != nil {
+	// TODO: Configure on mount?
+	cfg := config.MustConfigure()
+	if cfg.RedisURL() == "" {
 		cfg.Println("using in-memory cache")
 		tiesCache = cache.Basic[[]*domain.Tie]()
 	} else {
@@ -28,12 +30,15 @@ func init() {
 	}
 }
 
-func (c CacheController) Mount(router *httprouter.Router) error {
-	router.DELETE("/", c.Invalidate)
+func (c CacheController) Mount(router chi.Router) error {
+	router.Route("/", func(r chi.Router) {
+		r.Use(RequireAuth)
+		r.Delete("/", c.Invalidate)
+	})
 	return nil
 }
 
-func (c CacheController) Invalidate(resp http.ResponseWriter, req *http.Request, params httprouter.Params) {
+func (c CacheController) Invalidate(resp http.ResponseWriter, req *http.Request) {
 	cfg, ctx := config.FromRequest(req), req.Context()
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 

@@ -1,0 +1,58 @@
+- name: tests.yml \ Curl basic flow
+  commands:
+    - command: curl -sf --show-error -H "$AUTH"          0.0.0.0:4000/ties                       |
+          jq '.data[] | .slug, .target_url'
+      checks:
+        - name: stdout
+          data:
+            - ""
+        - name: exitcode
+          data:
+            - "0"
+    - command: curl -sf --show-error -H "$AUTH" -XPOST   0.0.0.0:4000/ties -d @tests-create.json
+          | jq '.slug, .target_url'
+      checks:
+        - name: stdout
+          data:
+            - '"smoke"'
+            - '"http://0.0.0.0:4000/__smoke"'
+        - name: exitcode
+          data:
+            - "0"
+    - command: curl -sf --show-error -H "$AUTH"          0.0.0.0:4000/ties                       |
+          jq '.data[] | .slug, .target_url'
+      checks:
+        - name: stdout
+          data:
+            - '"smoke"'
+            - '"http://0.0.0.0:4000/__smoke"'
+        - name: exitcode
+          data:
+            - "0"
+    - command: curl -sf --show-error -H "$AUTH" -L       0.0.0.0:4000/smoke
+      checks:
+        - name: stdout
+          data:
+            - '"Hello Smoke Tests"'
+        - name: exitcode
+          data:
+            - "0"
+    - command: curl -sf --show-error -H "$AUTH" -XDELETE 0.0.0.0:4000/ties/smoke                 |
+          jq '.slug, .target_url'
+      checks:
+        - name: stdout
+          data:
+            - '"smoke"'
+            - '"http://0.0.0.0:4000/__smoke"'
+        - name: exitcode
+          data:
+            - "0"
+    - command: curl -sf --show-error -H "$AUTH"          0.0.0.0:4000/ties                       |
+          jq '.data[] | .slug, .target_url'
+      checks:
+        - name: stdout
+          data:
+            - ""
+        - name: exitcode
+          data:
+            - "0"

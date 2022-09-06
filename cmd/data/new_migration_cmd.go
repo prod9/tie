@@ -29,9 +29,10 @@ DROP TABLE dummy;
 `
 
 var newMigrationCmd = &cobra.Command{
-	Use:   "new-migration (name)",
-	Short: "Creates a new migration file with timestamps and the given name",
-	RunE:  runNewMigrationCmd,
+	Use:     "new-migration (name)",
+	Aliases: []string{"new-migrate"},
+	Short:   "Creates a new migration file with timestamps and the given name",
+	RunE:    runNewMigrationCmd,
 }
 
 func runNewMigrationCmd(cmd *cobra.Command, args []string) (err error) {
@@ -44,11 +45,11 @@ func runNewMigrationCmd(cmd *cobra.Command, args []string) (err error) {
 	name = time.Now().Format("200601021504") + "_" + flect.Underscore(name)
 	upname, downname := name+".up.sql", name+".down.sql"
 
-	uppath, err := filepath.Abs(filepath.Join("./data/middlewares", upname))
+	uppath, err := filepath.Abs(filepath.Join("./data/migrations", upname))
 	if err != nil {
 		return err
 	}
-	downpath, err := filepath.Abs(filepath.Join("./data/middlewares", downname))
+	downpath, err := filepath.Abs(filepath.Join("./data/migrations", downname))
 	if err != nil {
 		return err
 	}

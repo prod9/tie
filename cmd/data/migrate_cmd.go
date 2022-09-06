@@ -13,8 +13,8 @@ import (
 )
 
 var migrateCmd = &cobra.Command{
-	Use:   "migrate [middlewares-dir]",
-	Short: "Runs all migration scripts in middlewares-dir. Defaults to ./data/middlewares",
+	Use:   "migrate [migrations-dir]",
+	Short: "Runs all migration scripts in migrations-dir. Defaults to ./data/migrations",
 	RunE:  runMigrateCmd,
 }
 
@@ -27,7 +27,7 @@ func runMigration(intent data.Intent, args []string) (err error) {
 
 	cfg := config.MustConfigure()
 	prompt := prompts.New(cfg, args)
-	dir := prompt.OptionalStr("middlewares dir", "./data/middlewares")
+	dir := prompt.OptionalStr("migrations dir", "./data/migrations")
 
 	db, err := data.Connect(cfg)
 	if err != nil {
@@ -57,13 +57,13 @@ func runMigration(intent data.Intent, args []string) (err error) {
 	}
 
 	if dirty {
-		log.Println("some middlewares are missing or have changed content")
+		log.Println("some migrations are missing or have changed content")
 		if !prompt.YesNo("proceed anyway") {
 			return nil
 		}
 	}
 
-	log.Println(len(plans), "middlewares planned")
+	log.Println(len(plans), "migrations planned")
 	if !prompt.YesNo("apply changes") {
 		return nil
 	}

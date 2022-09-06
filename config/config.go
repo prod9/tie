@@ -35,7 +35,9 @@ const (
 	listenAddrKey  = "LISTEN_ADDR"
 	databaseUrlKey = "DATABASE_URL"
 	redisUrlKey    = "REDIS_URL"
-	apiPrefixKey   = "API_PREFIX"
+
+	apiPrefixKey  = "API_PREFIX"
+	adminTokenKey = "ADMIN_TOKEN"
 )
 
 func MustConfigure() *Config {
@@ -76,9 +78,11 @@ func initViper() (*viper.Viper, error) {
 
 	v.SetDefault(yesKey, "0")
 	v.SetDefault(listenAddrKey, ":4000")
-	v.SetDefault(databaseUrlKey, "postgres:///tie?sslmode=disable")
+	v.SetDefault(databaseUrlKey, "postgres:///ties?sslmode=disable")
 	v.SetDefault(redisUrlKey, "redis:///")
+
 	v.SetDefault(apiPrefixKey, "http://0.0.0.0:4000")
+	v.SetDefault(adminTokenKey, "c3b1466dc5ce8d98b11da92a8589778c")
 	return v, nil
 }
 
@@ -86,7 +90,9 @@ func (c *Config) AlwaysYes() bool     { return c.Viper.GetBool(yesKey) }
 func (c *Config) ListenAddr() string  { return c.Viper.GetString(listenAddrKey) }
 func (c *Config) DatabaseURL() string { return c.Viper.GetString(databaseUrlKey) }
 func (c *Config) RedisURL() string    { return c.Viper.GetString(redisUrlKey) }
-func (c *Config) APIPrefix() string   { return c.Viper.GetString(apiPrefixKey) }
+
+func (c *Config) APIPrefix() string  { return c.Viper.GetString(apiPrefixKey) }
+func (c *Config) AdminToken() string { return c.Viper.GetString(adminTokenKey) }
 
 func (c *Config) AllConfigurations() map[string]interface{} {
 	m := map[string]interface{}{}

@@ -2,9 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"github.com/go-chi/chi/v5"
 	"net/http"
-
-	"github.com/julienschmidt/httprouter"
 )
 
 var (
@@ -12,11 +11,12 @@ var (
 	ErrUnauthorized = &errImpl{"unauthorized", "unauthorized"}
 	ErrInternal     = &errImpl{"internal", "internal server error"}
 	ErrPermission   = &errImpl{"permission", "don't have permission to access"}
-	ErrBadrequest   = &errImpl{"bad_request", "bad request"}
+	ErrBadRequest   = &errImpl{"bad_request", "bad request"}
 
 	allControllers = []Interface{
 		HomeController{},
 		CacheController{},
+		TiesController{},
 	}
 )
 
@@ -29,10 +29,10 @@ func (i *errImpl) Code() string  { return i.code }
 func (i *errImpl) Error() string { return i.message }
 
 type Interface interface {
-	Mount(router *httprouter.Router) error
+	Mount(router chi.Router) error
 }
 
-func MountAll(router *httprouter.Router) error {
+func MountAll(router chi.Router) error {
 	for _, controller := range allControllers {
 		if err := controller.Mount(router); err != nil {
 			return err

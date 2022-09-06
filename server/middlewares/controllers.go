@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"fmt"
-	"github.com/julienschmidt/httprouter"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"sync"
 	"tie.prodigy9.co/config"
@@ -31,12 +31,12 @@ func AddControllers(handler http.Handler, cfg *config.Config) http.Handler {
 }
 
 func buildRouter() (http.Handler, error) {
-	router := httprouter.New()
+	router := chi.NewRouter()
 	if err := controllers.MountAll(router); err != nil {
 		return nil, err
 	}
 
-	router.NotFound = http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
+	router.NotFound(func(resp http.ResponseWriter, r *http.Request) {
 		render.Error(resp, r, 404, controllers.ErrNotFound)
 	})
 	return router, nil
