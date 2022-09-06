@@ -18,7 +18,7 @@ tests:
       - "curl -sf --show-error -H \"$AUTH\"          0.0.0.0:4000/ties                       | jq '.data[] | .slug, .target_url'"
       - "curl -sf --show-error -H \"$AUTH\" -XPOST   0.0.0.0:4000/ties -d @tests-create.json | jq '.slug, .target_url'"
       - "curl -sf --show-error -H \"$AUTH\"          0.0.0.0:4000/ties                       | jq '.data[] | .slug, .target_url'"
-      - "curl -sf --show-error -H \"$AUTH\" -L       0.0.0.0:4000/smoke"
+      - "curl -sf --show-error -H \"$AUTH\" -L       0.0.0.0:4000/smoke?Company=123\\&x=7"
       - "curl -sf --show-error -H \"$AUTH\" -XDELETE 0.0.0.0:4000/ties/smoke                 | jq '.slug, .target_url'"
       - "curl -sf --show-error -H \"$AUTH\"          0.0.0.0:4000/ties                       | jq '.data[] | .slug, .target_url'"
 

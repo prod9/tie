@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"tie.prodigy9.co/controllers/render"
@@ -22,5 +23,10 @@ func (c HomeController) Index(resp http.ResponseWriter, req *http.Request) {
 }
 func (c HomeController) Smoke(resp http.ResponseWriter, req *http.Request) {
 	// for smoke testing
-	render.JSON(resp, req, "Hello Smoke Tests")
+	m := map[string]any{"message": "Hello Smoke Tests"}
+	for key, values := range req.URL.Query() {
+		m[key] = fmt.Sprint(values[0])
+	}
+
+	render.JSON(resp, req, m)
 }

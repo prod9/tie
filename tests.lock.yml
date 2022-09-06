@@ -29,11 +29,11 @@
         - name: exitcode
           data:
             - "0"
-    - command: curl -sf --show-error -H "$AUTH" -L       0.0.0.0:4000/smoke
+    - command: curl -sf --show-error -H "$AUTH" -L       0.0.0.0:4000/smoke?Company=123\&x=7
       checks:
         - name: stdout
           data:
-            - '"Hello Smoke Tests"'
+            - '{"Company":"123","message":"Hello Smoke Tests","x":"7"}'
         - name: exitcode
           data:
             - "0"

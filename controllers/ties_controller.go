@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"net/http"
+	"net/url"
 	"tie.prodigy9.co/controllers/render"
 	"tie.prodigy9.co/domain"
 )
@@ -28,9 +29,16 @@ func (c TiesController) Redirect(resp http.ResponseWriter, req *http.Request) {
 	slug, tie := chi.URLParam(req, "slug"), &domain.Tie{}
 	if err := domain.GetTieBySlug(req.Context(), tie, slug); err != nil {
 		render.Error(resp, req, http.StatusBadRequest, err)
-	} else {
-		http.Redirect(resp, req, tie.TargetURL, http.StatusTemporaryRedirect)
+		return
 	}
+
+	outurl, err := url.Parse(tie.TargetURL)
+	if err != nil {
+		render.Error(resp, req, http.StatusInternalServerError, err)
+	}
+
+	outurl.RawQuery = req.URL.Query().Encode()
+	http.Redirect(resp, req, outurl.String(), http.StatusTemporaryRedirect)
 }
 
 func (c TiesController) Index(resp http.ResponseWriter, req *http.Request) {
