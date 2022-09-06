@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"tie.prodigy9.co/cmd/data"
+	"tie.prodigy9.co/cmd/ties"
 )
 
 var rootCmd = &cobra.Command{
@@ -15,5 +16,6 @@ func init() {
 		data.Cmd,
 		printConfigCmd,
 		serveCmd,
+		ties.Cmd,
 	)
 }

@@ -30,8 +30,8 @@ type Tie struct {
 	UpdatedAt time.Time `json:"updated_at" db:"mtime"`
 }
 
-func (t *Tie) Validate() error {
-	return nil
+func (t *Tie) String() string {
+	return t.Slug + " => " + t.TargetURL
 }
 
 func ListAllTies(ctx context.Context, out *List[*Tie]) error {
