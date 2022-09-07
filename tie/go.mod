@@ -9,7 +9,6 @@ require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/gobuffalo/flect v0.3.0
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/julienschmidt/httprouter v1.3.0
 	github.com/lib/pq v1.10.6
 	github.com/rs/cors v1.8.2
 	github.com/spf13/cobra v1.5.0

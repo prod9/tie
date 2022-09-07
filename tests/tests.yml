@@ -1,0 +1,24 @@
+---
+config:
+  interpreter: /bin/sh
+  timeout: 5s
+  env:
+    - "PATH=/opt/homebrew/bin:/usr/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+tests:
+  - name: Curl basic flow
+    config:
+      env:
+        - "AUTH=Authorization: Bearer c3b1466dc5ce8d98b11da92a8589778c"
+        - "HOST=0.0.0.0:4000"
+    checks:
+      - stdout
+      - exitcode
+    commands:
+      # GET->CREATE->GET->REDIR->DELETE->GET
+      - "curl -sf --show-error -H \"$AUTH\"          0.0.0.0:4000/ties                     | jq '.data[] | .slug, .target_url'"
+      - "curl -sf --show-error -H \"$AUTH\" -XPOST   0.0.0.0:4000/ties -d @create.json     | jq '.slug, .target_url'"
+      - "curl -sf --show-error -H \"$AUTH\"          0.0.0.0:4000/ties                     | jq '.data[] | .slug, .target_url'"
+      - "curl -sf --show-error -H \"$AUTH\" -L       0.0.0.0:4000/smoke?Company=123\\&x=7"
+      - "curl -sf --show-error -H \"$AUTH\" -XDELETE 0.0.0.0:4000/ties/smoke               | jq '.slug, .target_url'"
+      - "curl -sf --show-error -H \"$AUTH\"          0.0.0.0:4000/ties                     | jq '.data[] | .slug, .target_url'"
+

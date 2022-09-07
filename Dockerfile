@@ -1,12 +1,12 @@
 FROM alpine:edge AS builder
 RUN apk add --no-cache build-base go git
-WORKDIR /src/tie
+WORKDIR /src
 
-COPY go.mod go.sum ./
-RUN go mod download -x all
+COPY ./tie/go.mod ./tie/go.sum ./tie/
+RUN cd tie && go mod download -x all
 
 COPY . ./
-RUN go build -o /app/tie .
+RUN go build -v -o /app/tie tie.prodigy9.co
 
 # ---
 
