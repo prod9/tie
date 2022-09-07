@@ -1,4 +1,4 @@
 {
   "slug":"smoke",
-  "target_url":"http://0.0.0.0:4000/__smoke"
+  "target_url":"http://0.0.0.0:4000/__smoke?existing_query=should_persist"
 }

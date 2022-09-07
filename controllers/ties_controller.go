@@ -35,9 +35,17 @@ func (c TiesController) Redirect(resp http.ResponseWriter, req *http.Request) {
 	outurl, err := url.Parse(tie.TargetURL)
 	if err != nil {
 		render.Error(resp, req, http.StatusInternalServerError, err)
+		return
 	}
 
-	outurl.RawQuery = req.URL.Query().Encode()
+	queries := outurl.Query()
+	for key, values := range req.URL.Query() {
+		for _, v := range values {
+			queries.Add(key, v)
+		}
+	}
+
+	outurl.RawQuery = queries.Encode()
 	http.Redirect(resp, req, outurl.String(), http.StatusTemporaryRedirect)
 }
 
