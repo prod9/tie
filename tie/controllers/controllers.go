@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"net/http"
+	"tie.prodigy9.co/config"
 )
 
 var (
@@ -29,12 +30,12 @@ func (i *errImpl) Code() string  { return i.code }
 func (i *errImpl) Error() string { return i.message }
 
 type Interface interface {
-	Mount(router chi.Router) error
+	Mount(cfg *config.Config, router chi.Router) error
 }
 
-func MountAll(router chi.Router) error {
+func MountAll(cfg *config.Config, router chi.Router) error {
 	for _, controller := range allControllers {
-		if err := controller.Mount(router); err != nil {
+		if err := controller.Mount(cfg, router); err != nil {
 			return err
 		}
 	}

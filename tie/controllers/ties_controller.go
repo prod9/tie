@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"net/url"
+	"tie.prodigy9.co/config"
 	"tie.prodigy9.co/controllers/render"
 	"tie.prodigy9.co/domain"
 )
@@ -13,7 +14,7 @@ type TiesController struct{}
 
 var _ Interface = TiesController{}
 
-func (c TiesController) Mount(router chi.Router) error {
+func (c TiesController) Mount(cfg *config.Config, router chi.Router) error {
 	router.Route("/ties", func(r chi.Router) {
 		r.Use(RequireAuth)
 		r.Get("/", c.Index)

@@ -19,7 +19,7 @@ func AddControllers(handler http.Handler, cfg *config.Config) http.Handler {
 
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
 		once.Do(func() {
-			router, err = buildRouter()
+			router, err = buildRouter(cfg)
 		})
 
 		if err != nil {
@@ -30,9 +30,9 @@ func AddControllers(handler http.Handler, cfg *config.Config) http.Handler {
 	})
 }
 
-func buildRouter() (http.Handler, error) {
+func buildRouter(cfg *config.Config) (http.Handler, error) {
 	router := chi.NewRouter()
-	if err := controllers.MountAll(router); err != nil {
+	if err := controllers.MountAll(cfg, router); err != nil {
 		return nil, err
 	}
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
+	"tie.prodigy9.co/config"
 	"tie.prodigy9.co/controllers/render"
 	"tie.prodigy9.co/domain"
 )
@@ -12,7 +13,7 @@ type HomeController struct{}
 
 var _ Interface = HomeController{}
 
-func (c HomeController) Mount(router chi.Router) error {
+func (c HomeController) Mount(cfg *config.Config, router chi.Router) error {
 	router.Get("/__health", c.Index)
 	router.Get("/__smoke", c.Smoke)
 	return nil

@@ -18,9 +18,7 @@ var (
 	tiesCache cache.Interface[[]*domain.Tie]
 )
 
-func init() {
-	// TODO: Configure on mount?
-	cfg := config.MustConfigure()
+func (c CacheController) Mount(cfg *config.Config, router chi.Router) error {
 	if cfg.RedisURL() == "" {
 		cfg.Println("using in-memory cache")
 		tiesCache = cache.Basic[[]*domain.Tie]()
@@ -28,9 +26,7 @@ func init() {
 		cfg.Println("using redis cache")
 		tiesCache = cache.Redis[[]*domain.Tie](cfg, "tie-ties")
 	}
-}
 
-func (c CacheController) Mount(router chi.Router) error {
 	router.Route("/", func(r chi.Router) {
 		r.Use(RequireAuth)
 		r.Delete("/", c.Invalidate)
