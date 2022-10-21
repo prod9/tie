@@ -11,7 +11,6 @@ var (
 	ErrNotFound     = &errImpl{"not_found", "not found"}
 	ErrUnauthorized = &errImpl{"unauthorized", "unauthorized"}
 	ErrInternal     = &errImpl{"internal", "internal server error"}
-	ErrPermission   = &errImpl{"permission", "don't have permission to access"}
 	ErrBadRequest   = &errImpl{"bad_request", "bad request"}
 
 	allControllers = []Interface{

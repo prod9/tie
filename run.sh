@@ -7,4 +7,4 @@ then
   CMD="s"
 fi
 
-go run tie.prodigy9.co "$CMD"
+go run . "$CMD" "$@"
