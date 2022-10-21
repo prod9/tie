@@ -11,8 +11,11 @@ RUN go build -v -o /app/tie tie.prodigy9.co
 # ---
 
 FROM alpine:edge
+LABEL org.opencontainers.image.source=https://github.com/prod9/tie
+
 WORKDIR /app
 RUN apk add --no-cache ca-certificates tzdata
+
 COPY --from=builder /src/tie/data/migrations /app/data/migrations
 COPY --from=builder /app/tie /app
 

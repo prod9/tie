@@ -1,0 +1,22 @@
+name: dagger
+"on": push
+jobs:
+  deploy:
+    runs-on: self-hosted
+    env:
+      GITHUB_USER: chakrit
+      GITHUB_TOKEN: ${{ github.token }}
+      DAGGER_CACHE_FROM: type=gha,scope=prod9/p9
+      DAGGER_CACHE_TO: type=gha,mode=max,scope=prod9/p9
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: dagger update
+        uses: dagger/dagger-for-github@v3
+        with:
+          cmds: project update
+      - name: dagger push
+        if: ${{ github.ref_type == 'branch' && github.ref_name == 'main' }}
+        uses: dagger/dagger-for-github@v3
+        with:
+          cmds: do push

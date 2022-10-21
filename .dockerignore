@@ -1,6 +1,7 @@
-/.git
+.git
+.github
 .idea
-/cue.mod
-/tests
+cue.mod
 Dockerfile
+tests
 tie.prodigy9.co
