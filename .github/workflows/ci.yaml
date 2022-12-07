@@ -6,8 +6,8 @@ jobs:
     env:
       GITHUB_USER: chakrit
       GITHUB_TOKEN: ${{ github.token }}
-      DAGGER_CACHE_FROM: type=gha,scope=prod9/p9
-      DAGGER_CACHE_TO: type=gha,mode=max,scope=prod9/p9
+      DAGGER_CACHE_FROM: type=gha,scope=prod9/tie
+      DAGGER_CACHE_TO: type=gha,mode=max,scope=prod9/tie
     steps:
       - name: checkout
         uses: actions/checkout@v3
