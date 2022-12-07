@@ -50,6 +50,15 @@ func (c *Client) CreateTie(slug string, target string) (*domain.Tie, error) {
 	}
 }
 
+func (c *Client) DeleteTie(slug string) (*domain.Tie, error) {
+	tie := &domain.Tie{}
+	if err := c.do(tie, "DELETE", c.apiPrefix+"/ties/"+slug, nil); err != nil {
+		return nil, err
+	} else {
+		return tie, nil
+	}
+}
+
 func (c *Client) do(out any, method, path string, payload io.Reader) error {
 	req, err := http.NewRequest(method, path, payload)
 	if err != nil {

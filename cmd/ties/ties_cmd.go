@@ -11,5 +11,6 @@ func init() {
 	Cmd.AddCommand(
 		CreateCmd,
 		ListCmd,
+		DeleteCmd,
 	)
 }
