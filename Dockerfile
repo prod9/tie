@@ -2,7 +2,7 @@ FROM alpine:edge AS builder
 RUN apk add --no-cache build-base go git
 WORKDIR /src
 
-COPY ./tie/go.mod ./tie/go.sum ./tie/
+COPY ./go.mod ./go.sum ./tie/
 RUN cd tie && go mod download -x all
 
 COPY . ./
@@ -16,7 +16,7 @@ LABEL org.opencontainers.image.source=https://github.com/prod9/tie
 WORKDIR /app
 RUN apk add --no-cache ca-certificates tzdata
 
-COPY --from=builder /src/tie/data/migrations /app/data/migrations
+COPY --from=builder /src/data/migrations /app/data/migrations
 COPY --from=builder /app/tie /app
 
 EXPOSE 4000
