@@ -74,8 +74,12 @@ func (t *CreateTie) Validate() error {
 }
 
 func (t *CreateTie) Execute(ctx context.Context, out *Tie) error {
-	return data.Get(ctx, out,
-		`INSERT INTO ties (slug, target_url) VALUES ($1, $2) RETURNING *`,
+	return data.Get(ctx, out, `
+    INSERT INTO ties (slug, target_url)
+    VALUES ($1, $2)
+    ON CONFLICT (slug) DO UPDATE
+    SET target_url = $2
+    RETURNING *`,
 		t.Slug,
 		t.TargetURL)
 }
@@ -94,7 +98,6 @@ func (d *DeleteTie) Validate() error {
 }
 
 func (d *DeleteTie) Execute(ctx context.Context, out *Tie) error {
-	return data.Get(ctx, out,
-		`DELETE FROM ties WHERE slug = $1 RETURNING *`,
+	return data.Get(ctx, out, `DELETE FROM ties WHERE slug = $1 RETURNING *`,
 		d.Slug)
 }
