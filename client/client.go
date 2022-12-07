@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
+
 	"tie.prodigy9.co/config"
 	"tie.prodigy9.co/domain"
 )
@@ -76,11 +78,16 @@ func (c *Client) do(out any, method, path string, payload io.Reader) error {
 		defer resp.Body.Close()
 	}
 
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
 	if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
-		return fmt.Errorf("http status: %d", resp.StatusCode)
+		return fmt.Errorf("http status: %d with body `%s`", resp.StatusCode, string(body))
 	}
 	if out != nil {
-		if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
+		if err := json.Unmarshal(body, out); err != nil {
 			return err
 		}
 	}

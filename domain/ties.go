@@ -40,7 +40,7 @@ func ListAllTies(ctx context.Context, out *List[*Tie]) error {
 	}
 
 	return data.Select(ctx, &out.Data,
-		"SELECT * FROM ties ORDER BY id ASC")
+		`SELECT * FROM ties ORDER BY id ASC`)
 }
 
 func GetTieBySlug(ctx context.Context, out *Tie, slug string) error {
